@@ -1,17 +1,14 @@
 from app import app
 from flask import render_template, request, redirect, url_for, flash
-from app.forms import ContactForms 
+from app import mail  # ✓ Step 1 - mail import is present
+from flask_mail import Message  # ✓ Step 1 - Message import is present
+from app.forms import ContactForm
 
 
 ###
+
 # Routing for your application.
 ###
-if form.validate_on_submit():
-        # This is where you will eventually add the code to send the email
-        flash('Your message has been sent!', 'success')
-        return redirect(url_for('home')) # Or wherever your home route points
-        
-    return render_template('contact.html', form=form)
 
 @app.route('/')
 def home():
@@ -22,8 +19,44 @@ def home():
 @app.route('/about/')
 def about():
     """Render the website's about page."""
-    return render_template('about.html', name="Mary Jane")
+    return render_template('about.html', name="Sheldon Jones")
 
+@app.route('/contact', methods=['GET', 'POST']) 
+def contact():
+    """Render the website's contact form and send emails."""
+    form = ContactForm()
+    
+    if form.validate_on_submit():  
+        #  form data using Flask-WTF 
+        name = form.name.data
+        email = form.email.data
+        subject = form.subject.data
+        message_body = form.message.data
+        
+        
+        # Create and send email
+        msg = Message(
+            subject=f"Contact Form: {subject}",  # Using form data
+            sender=("Senders Name", "from@example.com"),
+            recipients=["sheldonajones@yahoo.com"]  
+        )
+        
+        msg.body = f"""
+Name: {name}
+Email: {email}
+Subject: {subject}
+
+Message:
+{message_body}
+        """
+        
+        mail.send(msg) 
+        
+        # Flash message and redirect
+        flash('Your message has been sent successfully!', 'success')
+        return redirect(url_for('home'))
+    
+    return render_template('contact.html', form=form)
 
 ###
 # The functions below should be applicable to all Flask apps.

@@ -12,3 +12,5 @@ class Config(object):
     MAIL_PORT = os.environ.get('MAIL_PORT', '25') 
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME') 
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_USE_TLS = True
+    MAIL_USE_SSL = False
