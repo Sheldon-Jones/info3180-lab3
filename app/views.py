@@ -1,10 +1,17 @@
 from app import app
 from flask import render_template, request, redirect, url_for, flash
+from app.forms import ContactForms 
 
 
 ###
 # Routing for your application.
 ###
+if form.validate_on_submit():
+        # This is where you will eventually add the code to send the email
+        flash('Your message has been sent!', 'success')
+        return redirect(url_for('home')) # Or wherever your home route points
+        
+    return render_template('contact.html', form=form)
 
 @app.route('/')
 def home():
